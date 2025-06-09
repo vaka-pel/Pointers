@@ -16,8 +16,10 @@ void main()
 
 	for (int i = 0; i < n; i++)
 	{
-		if (arr[i] % 2 == 0)even_count++;
-		else odd_count++;
+		/*if (arr[i] % 2 == 0)even_count++;
+		else odd_count++;*/
+		(arr[i] % 2 ? odd_count : even_count)++;
+
 	}
 	cout << " оличество четных чисел: " << even_count << endl;
 	cout << " оличество нечетных чисел: " << odd_count << endl;
@@ -26,12 +28,13 @@ void main()
 	int* even_arr = new int[even_count];
 	int* odd_arr = new int[odd_count];
 
-	
+	// копируем четные и нечетные числа
 
 	for (int i = 0, j = 0, k = 0; i < n; i++)
 	{
-		if (arr[i] % 2 == 0) even_arr[j++] = arr[i];
-		else odd_arr[k++] = arr[i];
+		/*if (arr[i] % 2 == 0) even_arr[j++] = arr[i];
+		else odd_arr[k++] = arr[i];*/
+		(arr[i] % 2 ? odd_arr[j++] : even_arr[k++]) = arr[i];
 	}
 	Print(even_arr, even_count);
 	Print(odd_arr, odd_count);
