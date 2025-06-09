@@ -2,20 +2,113 @@
 using namespace std;
 
 
+void FillRand(int arr[], const int n);
+void Print(int arr[], const int n);
+
+int* push_back(int arr[], int& n, const int value);
+int* push_front(int arr[], int& n, const int value);
+
+int* pop_back(int arr[], int& n);
+int* pop_front(int arr[], int& n);
+
 void main()
 {
 	setlocale(LC_ALL, "");
 	int n;
 	cout << "Введите размер массива: "; cin >> n;
 	int* arr = new int[n];
-	for (int i = 0; i < n; i++)
-	{
-		*(arr + i) = rand() % 100;
+	
+	FillRand(arr, n);
+	Print(arr, n);
 
-	}
+	int value;
+	cout << "Введите добавляемое значение: "; cin >> value;
+	arr =  push_back(arr, n, value);
+    Print(arr, n); 
+
+    cout << "Введите добавляемое значение: "; cin >> value;
+    arr =  push_front(arr, n, value);
+   	Print(arr, n);
+
+    arr =  pop_back(arr, n);
+	Print(arr, n);
+	
+	arr =  pop_front(arr, n);
+    Print(arr, n);
+
+	delete[] arr;
+	// Memory leak - утечка памяти.
+}
+
+void FillRand(int arr[], const int n)
+{
 	for (int i = 0; i < n; i++)
 	{
-		cout << arr[i] << "\t";
+		*(arr + i) = rand() % 100;	//Через арифметику указателей и оператор разыменования
+	}
+}
+void Print(int arr[], const int n)
+{
+	cout << arr << endl;
+	cout << *arr << endl;
+	for (int i = 0; i < n; i++)
+	{
+		cout << arr[i] << "\t";		//Через оператор индексирования (Subscript operator)
 	}
 	cout << endl;
+}
+int* push_back(int arr[], int& n, const int value)
+{
+	//  Создаем буферный массив нужного размера
+	int* buffer = new int[n + 1];
+
+	// копируем все элементы из исходного массива в буферный
+	for (int i = 0; i < n; i++)
+	{
+		buffer[i] = arr[i];
+	}
+	// удаляем исходный мвссив
+	delete[] arr;
+
+	// подменяем адрес исходного массива
+	arr = buffer;
+	buffer = nullptr; // nullptr - указатель на ноль
+
+	// далее в массиве arr появляется элемент, в который можно сохранить добавляемое значение
+	arr[n] = value;
+
+	//после добавления элемента в массив, количество его элементов увеличивается на 1
+	n++;
+
+	//Mission complete - значение добавлено
+	return arr;
+}
+int* push_front(int arr[], int& n, const int value)
+{
+	int* buffer = new int[n + 1];
+	for (int i = 0; i < n; i++)
+	{
+		buffer[i + 1] = arr[i];
+	}
+	delete[] arr;
+
+	buffer[0] = value;
+
+	n++;
+		return buffer;
+
+}
+int* pop_back(int arr[], int& n)
+{
+	int* buffer = new int[--n];
+	for (int i = 0; i < n; i++)buffer[i] = arr[i];
+	delete[] arr;
+	return buffer;
+}
+int* pop_front(int arr[], int& n)
+{
+	int* buffer = new int[--n];
+	for (int i = 0; i < n; i++)buffer[i] = arr[i + 1];
+	delete[] arr;
+	return buffer;
 }
